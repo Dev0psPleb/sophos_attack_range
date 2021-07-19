@@ -1,0 +1,8 @@
+[global]
+log_path = attack_range.log
+log_level = INFO
+attack_range_password = Ch@nG3_m3!
+cloud_provider = aws
+local_provider = vcenter
+tf_backend = local
+
