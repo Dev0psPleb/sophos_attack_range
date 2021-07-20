@@ -58,5 +58,9 @@ def init(args):
     if config['cloud_provider'] == 'aws' and config['windows_client'] == '1':
         log.error('ERROR: windows client is only support for Azure.')
         sys.exit(1)
+    
+    if config['cloud_provider'] == 'vsphere' and config['vsphere_server'] == 'vcenter.contoso.local':
+        log.error('ERROR: vcenter configuration is missing! Please re-run sophos_attack_range.py configure to configure vcenter.')
+        sys.exit(1)
 
     return TerraformController(config, log), config, log

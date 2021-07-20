@@ -57,6 +57,7 @@ psutil==5.6.7
 ptyprocess==0.6.0
 py==1.10.0
 pycparser==2.19
+pycrypto==2.6.1
 pycryptodome==3.9.9
 PyGithub==1.51
 Pygments==2.7.4
@@ -81,6 +82,7 @@ six==1.13.0
 splunk-sdk==1.6.12
 tabulate==0.8.6
 termcolor==1.1.0
+terraformvspherevm==0.0.13
 toml==0.10.0
 urllib3==1.25.11
 virtualenv==16.7.9

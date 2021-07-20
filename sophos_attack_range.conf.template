@@ -1,8 +1,418 @@
+# This file contains possible settings you can use to configure Attack Range
+
 [global]
 log_path = attack_range.log
-log_level = INFO
-attack_range_password = Ch@nG3_m3!
-cloud_provider = aws
-local_provider = vcenter
-tf_backend = local
+# Sets the log_path for the logging file
 
+log_level = INFO
+# Sets the log level for the logging
+# Possible values: INFO, ERROR
+
+attack_range_password = Ch@nG3_m3!
+# Master password for all administrative accounts
+# default Pl3ase-k1Ll-me:p
+
+cloud_provider = aws
+# cloud provider to deploy the Attack Range
+# example_1: aws
+# example_2: azure
+
+tf_backend = local
+# Specify terraform backend type 
+# Possible values: local, remote
+
+[aws]
+instance_type_ec2 = t3.2xlarge
+# instance type for the aws ec2 instances
+
+use_elastic_ips = 1
+# define if you want to use AWS EIPs or not
+
+tf_backend_name = threat_research_attack_range
+# only needed when you specify a remote backend
+# for AWS: need to be the name of the S3 bucket and DynamoDB table
+
+[azure]
+azure_subscription_id = xxx
+# only for cloud_provider azure
+# for instructions visit: https://docs.microsoft.com/en-us/azure/media-services/latest/how-to-set-azure-subscription?tabs=portal
+
+instance_type_vms = Standard_D4_v4
+# instance type for azure vms
+
+tf_backend_ressource_group = resource_group
+# only needed when you specify a remote backend
+
+tf_backend_storage_account = attackrangestorage
+# only needed when you specify a remote backend
+
+tf_backend_container = tfstate
+# only needed when you specify a remote backend
+
+[vsphere]
+vsphere_server = vcenter.contoso.local
+# VCenter server hostname
+
+user = Administrator@vsphere.local
+# VCenter username
+
+password = P@$$w0rD!
+# VCenter user password
+
+insecure = true
+# Connection to vcenter server. True if using self-signed
+# certificate. False if using signed/trusted certificate.
+
+[range_settings]
+key_name = attack-range-key-pair
+# please configure your ssh key name on aws
+# for instructions visit: https://github.com/splunk/attack_range/wiki/Ubuntu-18.04-Installation
+
+ip_whitelist = 0.0.0.0/0
+# Blocks from which Attack Range machines can be reached.
+# This allow comma-separated blocks
+# ip_whitelist = 0.0.0.0/0,35.153.82.195/32
+
+private_key_path = ~/.ssh/id_rsa
+# Specify the path to your private SSH key
+# required for both AWS and Azure
+
+public_key_path = ~/.ssh/id_rsa.pub
+# Only for Azure needed
+
+region = us-west-2
+# Specify the region in which you want to build the attack range
+# for aws cloud: please ensure that aws_cli has the same region specified
+# example aws: us-west-2
+# example azure: West Europe
+
+range_name = default
+# Specify a unique name for the assets in a region
+# Setting this allows you to deploy additional ranges with the same key_name
+# An example would be for user1 and user2 testing in seperate environments
+# or user1 testing multiple use cases.
+# we suggest to use multiple attack_range.conf files when you deploy multiple
+# attack ranges.
+
+
+[splunk_settings]
+
+splunk_url = https://download.splunk.com/products/splunk/releases/8.2.1/linux/splunk-8.2.1-ddff1c41e5cf-Linux-x86_64.tgz
+# Specify the download URL of Splunk Enterprise
+
+splunk_binary = splunk-8.2.1-ddff1c41e5cf-Linux-x86_64.tgz
+# Specify the name of the Splunk Enterprise executable
+
+s3_bucket_url = https://attack-range-appbinaries.s3-us-west-2.amazonaws.com
+# Specify the S3 bucket url from which you want to download the Splunk Apps
+
+splunk_windows_ta = splunk-add-on-for-microsoft-windows_812.tgz
+# Specify the Splunk Windows TA
+
+splunk_sysmon_ta = splunk-add-on-for-microsoft-sysmon_1062.tgz
+# Specify the Splunk Sysmon TA
+
+splunk_cim_app = splunk-common-information-model-cim_4200.tgz
+# Specify the Splunk CIM App
+
+splunk_aws_ta = splunk-add-on-for-amazon-web-services_510.tgz
+# Specify the Splunk AWS TA
+
+splunk_escu_app = DA-ESS-ContentUpdate-latest.tar.gz
+# Specify the Splunk ESCU App
+
+splunk_asx_app = Splunk_ASX-latest.tar.gz
+# Specify the Splunk ASX App
+
+splunk_python_app = python-for-scientific-computing-for-linux-64-bit_202.tgz
+# Specify the Splunk python for scientific computing dependency that is needed by the MLTK app
+
+splunk_mltk_app = splunk-machine-learning-toolkit_521.tgz
+# Specify the Splunk MLTK App
+
+splunk_stream_app = splunk-app-for-stream_730.tgz
+# Specify the Splunk Stream App
+
+splunk_ta_wire_data = splunk-add-on-for-stream-wire-data_730.tgz
+# Specify the Splunk TA wire data
+
+splunk_ta_stream = splunk-add-on-for-stream-forwarders_730.tgz
+# Specify the Splunk TA stream
+
+splunk_security_essentials_app = splunk-security-essentials_333.tgz
+# Specify the Splunk SSE App
+
+splunk_zeek_ta = splunk-add-on-for-zeek-aka-bro_400.tgz
+# Specify the Splunk Zeek TA
+
+splunk_kinesis_ta = splunk-add-on-for-amazon-kinesis-firehose_131r7d1d093.tgz
+# Specify the Splunk Kinesis TA
+
+splunk_office_365_ta = splunk-add-on-for-microsoft-office-365_202.tgz
+# Specify the Office 365 TA
+
+splunk_linux_ta = splunk-add-on-for-unix-and-linux_820.tgz
+
+punchard_custom_visualization = punchcard-custom-visualization_140.tgz
+
+status_indicator_custom_visualization = status-indicator-custom-visualization_140.tgz
+
+splunk_attack_range_dashboard = splunk_attack_range_reporting-1.0.5.tar.gz
+
+timeline_custom_visualization = timeline-custom-visualization_140.tgz
+
+splunk_bots_dataset = 0
+# A comma separated list of values indicating which of the open-source Boss
+# of the SOC (BOTS) datasets to install.
+# 0  - Do not install any Boss of the SOC datasets (default)
+# 1  - full BOTSv1 dataset index=botsv1
+# 1a - attack-only BOTSv1 dataset index=botsv1 (recommended over full BOTSv1)
+# 2  - full BOTSv2 dataset index=botsv2
+# 2a - attack-only BOTSv2 dataset index=botsv2 (recommended over full BOTSv2)
+# 3  - full BOTSv3 dataset index=botsv3 (there is no 'attack-only for BOTSv3)
+#
+# Examples:
+#
+#   splunk_bots_dataset = 1a
+#   This setting works nicely with the 'Boss of the SOC (BOTS) Investigation
+#   Workshop for Splunk'
+#   https://splunkbase.splunk.com/app/3985/
+#
+#   splunk_bots_dataset = 1a,2a,3
+#   This is the recommended setting to get the most BOTS data while incurring
+#   least storage and download times
+#
+# For BOTSv1 and BOTSv2 the 'attack-only' versions of the datasets are
+# preferable. They contain all the malicious activity with none of the
+# bulky background noise. You cannot select both 1 and 1a, nor 2 and 2a.
+# doing so will result in an error during Attack Range Build.
+#
+# Note that specifying any of these datasets will cause the Attack Range build
+# process to download large files and store them in your Attack Range Splunk
+# instance. Slow network links combined with some of the larger BOTS datasets
+# will add significant time to your Attack Range build. A summary of the
+# datasets and their sizes can be found here:
+# https://github.com/splunk/securitydatasets
+#
+# Note the Attack Range build process does not currently install the Splunk
+# apps and add-ons for the BOTS data. You may view the list of apps and
+# add-ons that are associated with each dataset here:
+# https://github.com/splunk/securitydatasets
+#
+# For more information please see: https://github.com/splunk/securitydatasets
+#
+# Questions or comments? Please email the BOTS team: bots@splunk.com
+#
+
+[dsp]
+install_dsp = 0
+# specify whether enable DSP output in Splunk or not
+
+dsp_client_cert_path =
+# specify the certificate path for the DSP client. A certificate must be generated using the following instructions:
+# https://docs.splunk.com/Documentation/DSP/1.1.0/Data/Forwarder#Configure_your_forwarder_to_use_the_client_certificate
+# specifically the path to the generated my_forwarder-keys.pem
+
+dsp_node =
+# specify a comma delimited list of DSP nodes to forward data to.
+# Please verify that your attack_range network can connect to port 9997
+
+
+[phantom_settings]
+phantom_community_username = user
+# Specify the username needed to login to my.phantom.us to download Phantom
+# This must be changed to a real username
+# You can register under my.phantom.us
+
+phantom_community_password = password
+# Specify the password used to login to my.phantom.us to download Phantom
+# This must be changed to a real password
+# You can register under my.phantom.us
+
+phantom_app = phantom-app-for-splunk_4035.tgz
+
+
+[windows_settings]
+splunk_uf_win_url = https://download.splunk.com/products/universalforwarder/releases/8.0.2/windows/splunkforwarder-8.0.2-a7f645ddaf91-x64-release.msi
+# Specify the download URL of the Splunk windows universal forwarder
+
+win_sysmon_url = https://attack-range-appbinaries.s3-us-west-2.amazonaws.com/Sysmon.zip
+# Specify the download URL of sysmon
+
+win_sysmon_template = AttackRangeSysmon.xml
+# Specify the sysmon template
+# Possible Values: SysmonConfig-moti.xml, SysmonConfig-Neo23x0-server.xml, SysmonConfig-Neo23x0-workstations.xml, SysmonConfig-TSwift.xml, SysmonConfig-Verbose.xml, SysmonConfigCustom.xml
+
+win_4688_cmd_line = 1
+# Enables cmd line logging of Windows Security Events 4688
+
+verbose_win_security_logging = 0
+# Enable verbose windows security logging
+
+
+[enterprise_security]
+install_es = 0
+# Specify whether install Splunk Enterprise Security or not.
+# Splunk Enterprise Security is a Splunk Premium App, that's why it needs to be downloaded and stored into apps folder.
+# After installing ES, Splunk is available under https://[ip]:8000
+# possible values: 1, 0
+
+splunk_es_app = splunk-enterprise-security_660.spl
+# Spefify the name of the Splunk Enterprise Security file, which you saved into the apps folder.
+
+
+[testing]
+update_escu_app = 0
+# update the ESCU app with a local security content version
+
+security_content_path = ../security_content
+# path to local security content project
+
+
+[simulation]
+art_run_techniques = T1003.001
+# Specify the run technique of atomic_red_team
+# You can specify this value either over the command line or in this configuration file. Command line is prioritized over configuration file.
+
+art_repository = redcanaryco
+# Specify the Atomic Red Team repository fork, which you want to use.
+
+art_branch =  master
+# Specify new branch of the Atomic Red Team repository, which you want to use.
+
+install_red_team_tools = 0
+# Specify whether to install multiple red team tools for simulating threats.
+# possible values: 1, 0
+
+[environment]
+# specify your Attack Range environment by enabling (1) or disabling (0) machines
+
+phantom_server = 0
+# enable a phantom server
+# possible values: 1, 0
+
+windows_domain_controller = 1
+# enable a windows domain controller
+# possible values: 1, 0
+
+windows_server = 0
+# enable a windows server
+# possible values: 1, 0
+
+kali_machine = 0
+# enable a kali linux machine
+# possible values: 1, 0
+
+windows_client = 0
+# enable a windows client
+# this is only possible for vagrant in the moment
+# possible values: 1, 0
+
+zeek_sensor = 0
+# enable a zeek zeek_sensor
+# possible values: 1, 0
+
+osquery_machine = 0
+# enable a osquery linux server
+# possible values: 1, 0
+
+[splunk_server]
+# customize the splunk server
+
+splunk_server_private_ip = 10.0.1.12
+# specify the splunk server's private ip
+# Should be in subnet: 10.0.1.0/24
+
+
+[phantom_server]
+# customize the phantom server
+
+phantom_server_private_ip = 10.0.1.13
+# specify the phantom server's private ip
+# Should be in subnet: 10.0.1.0/24
+
+[windows_domain_controller]
+# customize the windows domain controller
+
+windows_domain_controller_private_ip = 10.0.1.14
+# specify the windows domain controller's private ip
+# should be in subnet: 10.0.1.0/24
+
+windows_domain_controller_os = Windows_Server-2016-English-Full-Base-*
+# specify the windows domain controller operating System
+# currently only Windows_Server_2016 is supported
+
+windows_domain_controller_zeek_capture = 0
+#specify if you want to capture wire data from the Windows Domain Controller
+# possible values: 1, 0
+
+
+[windows_server]
+# customize the windows server
+
+windows_server_private_ip = 10.0.1.15
+# specify the windows server private ip
+# should be in subnet: 10.0.1.0/24
+
+windows_server_os = Windows_Server-2016-English-Full-Base-*
+# specify the windows server operating System
+# currently only Windows_Server_2016 is supported
+
+windows_server_join_domain = 1
+# specify if the windows server should join the windows domain
+# possible values: 1, 0
+
+windows_server_zeek_capture = 0
+#specify if you want to capture wire data from the Windows server
+# possible values: 1, 0
+
+
+[kali_machine]
+# customize the kali machine
+
+kali_machine_private_ip = 10.0.1.16
+# specify the kali machine private ip
+# should be in subnet: 10.0.1.0/24
+
+
+[windows_client]
+# customize the windows client
+
+windows_client_private_ip = 10.0.1.17
+# specify the windows client private ip
+# should be in subnet: 10.0.1.0/24
+
+windows_client_os = import-ami-0e5a092cc20dbb992
+# specify the windows server operating System
+# specify the ami name
+# instructions to upload your own Windows 10 ami: https://github.com/splunk/attack_range/wiki/Upload-Windows-10-AMI-to-AWS
+
+windows_client_join_domain = 1
+# specify if the windows client should join the windows domain
+# possible values: 1, 0
+
+windows_client_zeek_capture = 0
+#specify if you want to capture wire data from the Windows client
+# possible values: 1, 0
+
+[zeek_sensor]
+# customize the zeek sensor
+
+splunk_uf_linux_deb_url = https://download.splunk.com/products/universalforwarder/releases/8.0.5/linux/splunkforwarder-8.0.5-a1a6394cc5ae-linux-2.6-amd64.deb
+# Specify the download URL of the Splunk Linux (debian based) universal forwarder
+
+splunk_uf_binary = splunkforwarder-8.0.5-a1a6394cc5ae-linux-2.6-amd64.deb
+# Specify the name of the Splunk binary installer
+
+zeek_sensor_private_ip = 10.0.1.18
+# specify the zeek sensor private ip
+# for mode terraform should be in subnet: 10.0.1.0/24
+
+[osquery_machine]
+# customize the osquery machine
+
+osquery_linux_private_ip = 10.0.1.19
+# specify the osquery linux server's private ip
+# Should be in subnet: 10.0.1.0/24
+
+osquery_custom_config_file = custom_osquery.conf
